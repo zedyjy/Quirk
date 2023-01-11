@@ -1,0 +1,16 @@
+begin
+
+%%%
+A program to test syntax errors
+%%%
+
+connect_to_internet();
+
+
+int x = 7 * 4                                     %% This is a syntax error since there is no ; at the end
+
+string my_string = "salutations" / "earth";       %% This is a syntax error since string division is not supported (not meaningful)
+
+int received_value = receive true;                %% This is a syntax error since receive keyword is reserved for receiving values from URLs (e.g. receive my_url), not boolean literals 
+
+end

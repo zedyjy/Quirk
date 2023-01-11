@@ -1,0 +1,43 @@
+begin
+
+%% This program controls switches
+
+boolean bool_value;
+boolean switch3_bool_value;
+connect_to_internet();
+URL myUrl = 'https://example.com';
+connect myUrl;
+
+%% Changes all switches depending on received value
+ 
+for(int i = 1; i <=10; i = i + 1){
+	bool_value = getValue(myUrl);
+	change_switch_state(bool_value, i);
+}
+
+%% Turn off all switches if air pressure is higher than 3
+
+if(get_air_pressure() > 30){
+	for(int i = 1; i < 10; i = i + 1){
+		change_switch_state(false, i);
+	}
+}
+
+%% Change switch 3 state in 10 seconds at a time. Switch 3 actuates hydraulic cylinders
+
+float time = get_time();
+while(get_time() - time < 10){
+	switch3_bool_value = getValue(myUrl);
+	change_switch_state(switch3_bool_value, 3);	
+}
+
+%% A function to return received value
+
+declare getValue(URL myUrl_){
+	int switch_bool_value = receive myUrl_;
+	return switch_bool_value == 1;
+}
+
+disconnect_from_internet();
+
+end

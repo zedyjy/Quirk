@@ -1,0 +1,37 @@
+begin
+
+%% A program to read from sensors and send the data 
+
+connect_to_internet();
+%% In Quirk, URL type variables are first defined and then connected through the connect keyword
+URL first_site = 'https://realsite.com.tr';  %% URL definition
+URL second_site = 'https://morerrealsite.com.tr';
+
+%% For ten seconds, read the temperature and send data to the first site
+connect first_site;  %% URL connection
+for(float time = get_time(); get_time() - time < 10; ){
+	send get_temperature() first_site;
+}
+
+%%%
+Function to calculate the apparent temperature
+Returns int
+%%%
+declare calculate_apparent_temp(int temp, int humidity){
+	int apparent_temp = temp + 0.348*humidity;
+	return apparent_temp;
+}
+
+%% Calculate the apparent temperature and if the 5th switch is on (we can assume it is connected to a motor), send it to the second site
+int apparent_temp = calculate_apparent_temp(get_temperature(), get_humidity());
+connect second_site;
+while(apparent_temp < 20){
+	if(get_switch_state(5)){
+		send get_air_quality() second_site;
+	}
+	
+}
+
+disconnect_from_internet();
+
+end
